@@ -1,0 +1,37 @@
+{
+  "name": "attach-model",
+  "version": "0.1.0",
+  "description": "A middleware to attach Sequelize models to a request",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "coffee -c -b -o lib/ src/",
+    "test": "mocha --compilers=coffee:coffee-script/register test.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alxarch/attach-model.git"
+  },
+  "keywords": [
+    "express",
+    "sequelize",
+    "middleware"
+  ],
+  "author": "Alexandros Sigalas <alxarch@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alxarch/attach-model/issues"
+  },
+  "homepage": "https://github.com/alxarch/attach-model#readme",
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "express": "^4.13.3",
+    "moment": "^2.10.6",
+    "sqlite3": "^3.1.0",
+    "supertest": "^1.1.0",
+    "supertest-as-promised": "^2.0.2"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "sequelize": "^3.12.2"
+  }
+}
