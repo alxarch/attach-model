@@ -1,6 +1,6 @@
 {
   "name": "attach-model",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A middleware to attach Sequelize models to a request",
   "main": "lib/index.js",
   "scripts": {
