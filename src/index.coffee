@@ -1,5 +1,4 @@
 _ = require "lodash"
-Sequelize = require "sequelize"
 extract = (obj, extractor) ->
 	switch typeof extractor
 		when "function"
@@ -25,9 +24,6 @@ class NotFoundError extends Error
 
 
 module.exports = (model, options={}) ->
-	unless model instanceof Sequelize.Model
-		throw new TypeError "Invalid model"
-
 	{where, required, multiple, include, as, defaults} = _.defaults {}, options,
 		where: (req) -> id: req.params.id
 		include: []
@@ -56,7 +52,7 @@ module.exports = (model, options={}) ->
 
 		find.then (result) ->
 			if required and not multiple and not result?
-				throw new errorClass errorMessage 
+				throw new errorClass errorMessage
 			req[as] = result
 			next()
 		.catch next
