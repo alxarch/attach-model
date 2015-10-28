@@ -17,7 +17,7 @@ extract = (obj, extractor) ->
 			_.get obj, extractor
 
 class NotFoundError extends Error
-	status: 400
+	status: 404
 	constructor: (@message) ->
 		super
 		Error.captureStackTrace @, @

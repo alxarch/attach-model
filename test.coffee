@@ -28,3 +28,7 @@ describe "attachModel middleware", ->
 			assert.equal res.body.tasks.length, 3
 			for task in res.body.tasks
 				assert.equal task.author, "john"
+
+	it "Responds 404 on missing model", ->
+		app.get "/tasks/z"
+		.expect 404
