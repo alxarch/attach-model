@@ -24,7 +24,7 @@ class NotFoundError extends Error
 
 
 module.exports = (model, options={}) ->
-	{where, required, multiple, include, as, defaults} = _.defaults {}, options,
+	{where, required, multiple, include, as, defaults, errorClass, errorMessage} = _.defaults {}, options,
 		where: (req) -> id: req.params.id
 		include: []
 		multiple: no
