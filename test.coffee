@@ -29,6 +29,12 @@ describe "attachModel middleware", ->
 			for task in res.body.tasks
 				assert.equal task.author, "john"
 
+	it "Handles empty multiple instances", ->
+		app.get "/tasks/by-author/sigmund"
+		.expect 200
+		.then (res) ->
+			assert.equal res.body.tasks.length, 0
+
 	it "Responds 404 on missing model", ->
 		app.get "/tasks/z"
 		.expect 404

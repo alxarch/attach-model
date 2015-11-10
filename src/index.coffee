@@ -35,20 +35,21 @@ module.exports = (model, options={}) ->
 		errorMessage: "#{_.capitalize model.name} not found"
 
 	(req, res, next) ->
-		if multiple
-			find = model.findAll
-				where: extract req, where
-				include: include
-		else if defaults?
-			find = model.findCreateFind
-				where: extract req, where
-				include: include
-				defaults: extract req, defaults
-			.then ([instance]) -> instance
-		else
-			find = model.find
-				where: extract req, where
-				include: include
+		find = do ->
+			if multiple
+				find = model.findAll
+					where: extract req, where
+					include: include
+			else if defaults?
+				find = model.findCreateFind
+					where: extract req, where
+					include: include
+					defaults: extract req, defaults
+				.then ([instance]) -> instance
+			else
+				find = model.find
+					where: extract req, where
+					include: include
 
 		find.then (result) ->
 			if required and not multiple and not result?
