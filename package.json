@@ -1,6 +1,6 @@
 {
   "name": "attach-model",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "A middleware to attach Sequelize models to a request",
   "main": "lib/index.js",
   "scripts": {
@@ -25,13 +25,12 @@
   "devDependencies": {
     "coffee-script": "^1.10.0",
     "express": "^4.13.3",
+    "lodash": "^3.10.1",
     "moment": "^2.10.6",
     "sequelize": "^3.13.0",
     "sqlite3": "^3.1.0",
     "supertest": "^1.1.0",
     "supertest-as-promised": "^2.0.2"
   },
-  "dependencies": {
-    "lodash": "^3.10.1"
-  }
+  "dependencies": {}
 }
