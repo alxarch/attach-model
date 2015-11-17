@@ -12,14 +12,14 @@ module.exports = helpers =
 			attr obj
 		else if Array.isArray attr
 			for a in attr
-				resolve obj, a
+				helpers.resolve obj, a
 		else if "Object" is attr?.constructor?.name
 			if "$get" of attr
 				helpers.pathget obj, attr.$get
 			else
 				result = {}
 				for own key, value of attr
-					result[key] = resolve obj, value
+					result[key] = helpers.resolve obj, value
 				result
 		else
 			attr

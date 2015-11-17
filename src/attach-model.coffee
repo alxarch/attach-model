@@ -3,7 +3,7 @@ NotFoundError = require "./not-found-error"
 
 module.exports = (model, options={}) ->
 	{where, required, multiple, include, as, defaults, errorClass, errorMessage} = assign_defaults {}, options,
-		where: (req) -> id: req.params.id
+		where: id: $get: "params.id"
 		include: []
 		multiple: no
 		required: yes
