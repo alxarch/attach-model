@@ -1,4 +1,4 @@
-module.exports =
+module.exports = helpers =
 	assign_defaults: (base, objects...) ->
 		if base? and "object" is typeof base
 			for obj in objects when obj? and "object" is typeof obj
@@ -7,16 +7,24 @@ module.exports =
 		base
 
 	ucfirst: (value) -> "#{value[0].toUpperCase()}#{value[1..]}"
-	resolve: (req, attr) ->
+	resolve: (obj, attr) ->
 		if "function" is typeof attr
-			attr req
+			attr obj
 		else if Array.isArray attr
 			for a in attr
-				resolve req, a
+				resolve obj, a
 		else if "Object" is attr?.constructor?.name
-			result = {}
-			for own key, value of attr
-				result[key] = resolve req, value
-			result
+			if "$get" of attr
+				helpers.pathget obj, attr.$get
+			else
+				result = {}
+				for own key, value of attr
+					result[key] = resolve obj, value
+				result
 		else
 			attr
+	pathget: (obj, path) ->
+		if obj? and "object" is typeof obj
+			for key in path.split /(?:\.|\[|\]\.?)/g when obj?
+				obj = obj[key]
+		obj
