@@ -30,6 +30,7 @@ app.get "/tasks/by-author/:name",
 app.get "/tasks/:id",
 	attachModel Task,
 		as: "task"
+		ttl: 60
 	(req, res) -> res.json task: req.task
 
 module.exports = agent = supertest app

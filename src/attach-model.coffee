@@ -1,4 +1,4 @@
-{assign_defaults, ucfirst, resolve} = require "./helpers"
+{noop, md5sum, assign_defaults, ucfirst, resolve} = require "./helpers"
 NotFoundError = require "./not-found-error"
 
 module.exports = (model, options={}) ->
@@ -8,6 +8,7 @@ module.exports = (model, options={}) ->
 		order: []
 		multiple: no
 		required: yes
+		ttl: 0
 		as: model.name
 		defaults: null
 		errorClass: NotFoundError
@@ -15,17 +16,34 @@ module.exports = (model, options={}) ->
 	
 	if options.include and not Array.isArray options.include
 		options.include = [options.include]
+	
+	cache = {}
+	ttl = parseInt(options.ttl) or 0
+	if ttl > 0
+		cacheResult = buildCacheKey = noop
+	else
+		ttl *= 1000
+		buildCacheKey = (query_options) ->
+			md5sum JSON.stringify query_options
+		cacheResult = (key, result) ->
+			if key not of cache
+				cache[key] = result
+				setTimeout (-> delete cache[key]), ttl
+			cache[key]
 
 	(req, res, next) ->
-		query_options = {}
-		for key in ["where", "include", "order", "limit", "offset"] when key of options
+		query_options = _multiple: options.multiple
+		for key in ["defaults", "where", "include", "order", "limit", "offset"] when key of options
 			query_options[key] = resolve req, options[key]
 
+		cache_key = buildCacheKey query_options
+
 		try
-			if options.multiple
+			if ttl > 0 and cache_key of cache
+				find = Promise.resolve cache[cache_key]
+			else if options.multiple
 				find = model.findAll query_options
 			else if options.defaults?
-				query_options.defaults = resolve req, options.defaults
 				find = model.findCreateFind query_options
 					.then ([instance]) -> instance
 			else
@@ -34,6 +52,7 @@ module.exports = (model, options={}) ->
 			return next err
 
 		find.then (result) ->
+			cacheResult cache_key, result
 			if options.required and not options.multiple and not result?
 				throw new options.errorClass options.errorMessage
 			req[options.as] = result
