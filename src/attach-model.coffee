@@ -2,9 +2,10 @@
 NotFoundError = require "./not-found-error"
 
 module.exports = (model, options={}) ->
-	{where, required, multiple, include, as, defaults, errorClass, errorMessage} = assign_defaults {}, options,
+	options = assign_defaults {}, options,
 		where: id: $get: "params.id"
 		include: []
+		order: []
 		multiple: no
 		required: yes
 		as: model.name
@@ -12,29 +13,29 @@ module.exports = (model, options={}) ->
 		errorClass: NotFoundError
 		errorMessage: "#{ucfirst model.name} not found"
 	
-	if include and not Array.isArray include
-		include = [include]
+	if options.include and not Array.isArray options.include
+		options.include = [options.include]
 
 	(req, res, next) ->
-		options = where: resolve req, where
-		if include
-			options.include = resolve req, include
+		query_options = {}
+		for key in ["where", "include", "order", "limit", "offset"] when key of options
+			query_options[key] = resolve req, options[key]
 
 		try
-			if multiple
-				find = model.findAll options
-			else if defaults?
-				options.defaults = resolve req, defaults
-				find = model.findCreateFind options
+			if options.multiple
+				find = model.findAll query_options
+			else if options.defaults?
+				query_options.defaults = resolve req, options.defaults
+				find = model.findCreateFind query_options
 					.then ([instance]) -> instance
 			else
-				find = model.find options
+				find = model.find query_options
 		catch err
 			return next err
 
 		find.then (result) ->
-			if required and not multiple and not result?
-				throw new errorClass errorMessage
-			req[as] = result
+			if options.required and not options.multiple and not result?
+				throw new options.errorClass options.errorMessage
+			req[options.as] = result
 			next()
 		.catch next

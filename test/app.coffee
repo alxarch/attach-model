@@ -15,6 +15,8 @@ app.get "/tasks/since/:since",
 	attachModel Task,
 		multiple: yes
 		as: "tasks"
+		offset: (req) -> parseInt(req.query?.offset) or 0
+		limit: (req) -> parseInt(req.query?.limit) or null
 		where: (req) -> created_at: $gte: req.params.since
 	(req, res) -> res.json tasks: req.tasks
 

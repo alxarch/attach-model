@@ -21,6 +21,20 @@ describe "attachModel middleware", ->
 		.then (res) ->
 			assert.deepEqual res.body.tasks, TASKS
 
+	it "Attaches multiple instances with offset", ->
+		app.get "/tasks/since/#{new Date(0).toISOString()}"
+		.query offset: 2
+		.expect 200
+		.then (res) ->
+			assert.equal (TASKS.length - 2), res.body.tasks.length
+
+	it "Attaches multiple instances with limit", ->
+		app.get "/tasks/since/#{new Date(0).toISOString()}"
+		.query limit: 2
+		.expect 200
+		.then (res) ->
+			assert.equal 2, res.body.tasks.length
+
 	it "Handles where arguments", ->
 		app.get "/tasks/by-author/john"
 		.expect 200
