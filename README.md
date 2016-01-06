@@ -80,3 +80,13 @@ See [request parameters](#request-parameters)
 ### options.errorMessage
 
 > String default: "Model not found"
+
+### options.ttl
+
+> Number default: 0
+
+Cache TTL in seconds for results.
+
+This is a poor man's cache solution storing the resulting Model instances to a POJO.
+Use for *small* and frequently accessed result sets to improve performance.
+
