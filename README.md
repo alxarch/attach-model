@@ -17,9 +17,10 @@ app.get("/foo/:id", attachModel(models.Foo, {as: "foo", required: true}), functi
 
 ### Request parameters
 
-Resolving request parameters to populate `options.where` and `options.include` happens
-by using a 'special' object. The object is searched recursively for either a callback value or
-a `$get` key to retrieve a value from the req object by path notation. In code:
+In order to map request parameters to query options, the value of query-related
+options (`where`, `include`, `order`, `offset`, `limit`) is searched recursively
+for either a `function` value or a `$get` key to retrieve a value 
+from the `req` object by path notation. In code:
 
 ```js
 var options = {
@@ -77,9 +78,13 @@ See [request parameters](#request-parameters)
 
 > Function default: NotFoundError
 
+If `options.multiple` is `true` this is not applicable.
+
 ### options.errorMessage
 
 > String default: "Model not found"
+
+If `options.multiple` is `true` this is not applicable.
 
 ### options.ttl
 
@@ -89,4 +94,25 @@ Cache TTL in seconds for results.
 
 This is a poor man's cache solution storing the resulting Model instances to a POJO.
 Use for *small* and frequently accessed result sets to improve performance.
+
+### options.order
+
+> Array[Array[column, order]] default: []
+
+Specify query result order.
+See [request parameters](#request-parameters)
+
+### options.limit
+
+> Number default: null
+
+Specify query results limit.
+See [request parameters](#request-parameters)
+
+### options.offset
+
+> Number default: 0
+
+Specify query results offset.
+See [request parameters](#request-parameters)
 
