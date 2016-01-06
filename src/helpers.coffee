@@ -1,3 +1,5 @@
+{createHash} = require "crypto"
+
 module.exports = helpers =
 	assign_defaults: (base, objects...) ->
 		if base? and "object" is typeof base
@@ -28,3 +30,8 @@ module.exports = helpers =
 			for key in path.split /(?:\.|\[|\]\.?)/g when obj?
 				obj = obj[key]
 		obj
+	md5sum: (value) ->
+		md5 = createHash "md5"
+		md5.end "#{value}"
+		md5.read().toString "hex"
+	noop: ->
